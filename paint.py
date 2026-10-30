@@ -2,10 +2,10 @@
 
 Exercises
 
-1. Add a color.
-2. Complete circle.
-3. Complete rectangle.
-4. Complete triangle """
+1. Agregar un nuevo color
+2. Completar el círculo
+3. Completar el rectángulo
+4. Completar el triángulo """
 from turtle import *
 from freegames import vector
 
