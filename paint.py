@@ -1,3 +1,4 @@
+
 """Paint, for drawing shapes.
 
 Exercises
@@ -10,6 +11,8 @@ Exercises
 
 from turtle import *
 from freegames import vector
+from math import hypot
+
 
 # dibuja una línea entre dos puntos
 def line(start, end):
@@ -23,48 +26,57 @@ def line(start, end):
 # dibuja un cuadrado utilizando el punto inicial y final
 def square(start, end):
     "Draw square from start to end."
+    # calcula el tamaño del cuadrado dependiendo del movimiento del mouse
+    side = max(abs(end.x - start.x), abs(end.y - start.y))
+
+    # identifica hacia qué dirección se va a dibujar
+    x = side if end.x >= start.x else -side
+    y = side if end.y >= start.y else -side
+
+    # se coloca en el punto inicial
     up()
     goto(start.x, start.y)
     down()
     begin_fill()
 
-    for count in range(4):
-        forward(end.x - start.x)
-        left(90)
+    # dibuja los cuatro lados del cuadrado
+    goto(start.x + x, start.y)
+    goto(start.x + x, start.y + y)
+    goto(start.x, start.y + y)
+    goto(start.x, start.y)
 
     end_fill()
 
 
-# dibuja un círculo relleno utilizando dos puntos seleccionados por el usuario
+# dibuja un círculo utilizando el punto inicial como centro
 def circle(start, end):
-    """Dibuja un círculo relleno utilizando dos puntos seleccionados    por el usuario.    Parámetros:        start (vector): Punto inicial donde comienza el círculo.        end (vector): Punto utilizado para calcular el radio."""
-    # levanta la pluma para moverse sin dibujar
+    "Draw circle from start to end."
+    # calcula el radio usando la distancia entre los dos puntos
+    radius = hypot(end.x - start.x, end.y - start.y)
+
+    # se coloca en la parte inferior del círculo
     up()
-    # se coloca en el punto inicial
-    goto(start.x, start.y)
-    # baja la pluma para comenzar a dibujar
+    goto(start.x, start.y - radius)
+    setheading(0)
     down()
-    # calcula el radio tomando la distancia horizontal entre el punto inicial y final
-    radius = abs(end.x - start.x)
-    # comienza a rellenar la figura
     begin_fill()
-    dot(radius * 2)
-    # termina el relleno del círculo
+
+    # dibuja el círculo con el radio calculado
+    circle(radius)
+
     end_fill()
 
 
 # dibuja un rectángulo utilizando los puntos inicial y final
 def rectangle(start, end):
     "Draw rectangle from start to end."
-    # levanta la pluma para colocarse en el punto inicial
+    # se coloca en el punto inicial
     up()
     goto(start.x, start.y)
-    # baja la pluma para comenzar a dibujar
     down()
-    # comienza a rellenar el rectángulo
     begin_fill()
 
-    # dibuja los cuatro lados utilizando el ancho y alto de los puntos
+    # dibuja los cuatro lados del rectángulo
     goto(end.x, start.y)
     goto(end.x, end.y)
     goto(start.x, end.y)
@@ -77,12 +89,10 @@ def rectangle(start, end):
 # dibuja un triángulo utilizando los puntos inicial y final
 def triangle(start, end):
     "Draw triangle from start to end."
-    # levanta la pluma para colocarse en el punto inicial
+    # se coloca en el punto inicial
     up()
     goto(start.x, start.y)
-    # baja la pluma para comenzar a dibujar
     down()
-    # comienza a rellenar el triángulo
     begin_fill()
 
     # dibuja los tres lados del triángulo
@@ -103,17 +113,19 @@ def tap(x, y):
         # guarda la primera posición donde se hizo clic
         state['start'] = vector(x, y)
     else:
-        # obtiene la figura seleccionada y utiliza el segundo clic como punto final
+        # obtiene la figura seleccionada y el segundo punto
         shape = state['shape']
         end = vector(x, y)
+
+        # dibuja la figura con los dos puntos
         shape(start, end)
-        # reinicia el punto inicial para poder dibujar otra figura
+
+        # reinicia el punto inicial para dibujar otra figura
         state['start'] = None
 
 
 # guarda la opción seleccionada en el estado del programa
 def store(key, value):
-
     state[key] = value
 
 
@@ -144,8 +156,8 @@ onkey(lambda: store('shape', circle), 'c')
 onkey(lambda: store('shape', rectangle), 'r')
 onkey(lambda: store('shape', triangle), 't')
 
-# nuevo color agregado
-# al presionar la tecla p se selecciona el color morado
+# agrega el color morado al programa
+# al presionar la tecla p se selecciona este color
 onkey(lambda: color('purple'), 'P')
 
 # mantiene abierta la ventana del programa
