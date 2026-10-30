@@ -29,10 +29,21 @@ def square(start, end):
 
     end_fill()
 
-
-def circle(start, end):
-    "Draw circle from start to end."
-    pass  # TODO
+def circle(start, end):   
+    """Dibuja un círculo relleno utilizando dos puntos seleccionados    por el usuario.    Parámetros:        start (vector): Punto inicial donde comienza el círculo.        end (vector): Punto utilizado para calcular el radio.""" 
+    # Levanta la pluma para moverse sin dibujar.    
+    up()    
+    # Se coloca en el punto inicial.    
+    goto(start.x, start.y)    
+    # Baja la pluma para comenzar a dibujar.    
+    down()    
+    # Calcular el radio tomando la distancia horizontal entre el punto inicial y final.    
+    radius = abs(end.x - start.x)   
+    # Comienza a rellenar la figura.    
+    begin_fill()    
+    dot(radius * 2)    
+    # Termina el relleno del círculo.    
+    end_fill()
 
 
 def rectangle(start, end):
