@@ -1,26 +1,46 @@
-"""Paint, for drawing shapes.
+"""
+Paint utilizando Turtle Graphics.
 
-Exercises
+Funcionalidades:
+- Dibujar líneas.
+- Dibujar cuadrados.
+- Dibujar círculos.
+- Dibujar rectángulos.
+- Dibujar triángulos.
+- Cambiar entre varios colores.
+- Deshacer el último dibujo con la tecla U.
 
-1. Add a color.
-2. Complete circle.
-3. Complete rectangle.
-4. Complete triangle """
+Autores:
+[Nombre de los integrantes]
+
+Fecha:
+[Fecha de entrega]
+"""
+
 from turtle import *
 from freegames import vector
+import math
 
-# dibuja una línea entre dos puntos
+
 def line(start, end):
-    "Draw line from start to end."
+    """
+    Dibuja una línea entre dos puntos.
+
+    Parámetros:
+        start (vector): Punto inicial.
+        end (vector): Punto final.
+    """
     up()
     goto(start.x, start.y)
     down()
     goto(end.x, end.y)
 
 
-# dibuja un cuadrado utilizando el punto inicial y final
 def square(start, end):
-    "Draw square from start to end."
+    """
+    Dibuja un cuadrado utilizando la distancia horizontal
+    entre los puntos inicial y final.
+    """
     up()
     goto(start.x, start.y)
     down()
@@ -34,103 +54,130 @@ def square(start, end):
 
 
 def circle(start, end):
-    "Draw circle from start to end."
-    pass  # TODO
+    """
+    Dibuja un círculo tomando como radio la distancia
+    entre el punto inicial y el punto final.
+    """
+    up()
+    goto(start.x, start.y)
+
+    # Calcula el radio mediante la fórmula de distancia
+    radius = math.sqrt(
+        (end.x - start.x) ** 2 +
+        (end.y - start.y) ** 2
+    )
+
+    down()
+    begin_fill()
+    turtle.circle(radius)
+    end_fill()
 
 
 def rectangle(start, end):
-    "Draw rectangle from start to end."
-    # levanta la pluma para colocarse en el punto inicial
+    """
+    Dibuja un rectángulo utilizando los puntos inicial
+    y final para determinar ancho y alto.
+    """
     up()
     goto(start.x, start.y)
-    # baja la pluma para comenzar a dibujar
     down()
-    # comienza a rellenar el rectángulo
     begin_fill()
 
-    # dibuja los cuatro lados utilizando el ancho y alto de los puntos
     goto(end.x, start.y)
     goto(end.x, end.y)
     goto(start.x, end.y)
     goto(start.x, start.y)
 
-    # termina de rellenar la figura
     end_fill()
 
 
-# dibuja un triángulo utilizando los puntos inicial y final
 def triangle(start, end):
-    "Draw triangle from start to end."
-    # levanta la pluma para colocarse en el punto inicial
+    """
+    Dibuja un triángulo isósceles utilizando los puntos
+    inicial y final.
+    """
     up()
     goto(start.x, start.y)
-    # baja la pluma para comenzar a dibujar
     down()
-    # comienza a rellenar el triángulo
     begin_fill()
 
-    # dibuja los tres lados del triángulo
+    # Base del triángulo
     goto(end.x, start.y)
+
+    # Vértice superior
     goto((start.x + end.x) / 2, end.y)
+
+    # Regresa al punto inicial
     goto(start.x, start.y)
 
-    # termina de rellenar la figura
     end_fill()
 
 
-# guarda el punto inicial o dibuja la figura seleccionada
 def tap(x, y):
-    "Store starting point or draw shape."
+    """
+    Guarda el primer clic como punto inicial.
+    Cuando se realiza un segundo clic, dibuja
+    la figura seleccionada.
+    """
     start = state['start']
 
     if start is None:
-        # guarda la primera posición donde se hizo clic
         state['start'] = vector(x, y)
+
     else:
-        # obtiene la figura seleccionada y utiliza el segundo clic como punto final
         shape = state['shape']
         end = vector(x, y)
+
         shape(start, end)
-        # reinicia el punto inicial para poder dibujar otra figura
+
         state['start'] = None
 
 
-# guarda la opción seleccionada en el estado del programa
 def store(key, value):
+    """
+    Guarda una configuración en el estado del programa.
 
+    Parámetros:
+        key: Nombre de la propiedad.
+        value: Valor que se desea almacenar.
+    """
     state[key] = value
 
 
-# establece el estado inicial y la figura seleccionada
-state = {'start': None, 'shape': line}
+# Estado del programa
+state = {
+    'start': None,
+    'shape': line
+}
 
-# configura el tamaño y la posición de la ventana
+# Configuración de la ventana
 setup(420, 420, 370, 0)
 
-# permite dibujar haciendo clic en la pantalla
+# Detecta clics del usuario
 onscreenclick(tap)
+
+# Activa la escucha del teclado
 listen()
 
-# permite deshacer el último dibujo con la tecla u
+# Permite deshacer el último dibujo
 onkey(undo, 'u')
 
-# selecciona los colores disponibles mediante el teclado
+# Colores disponibles
 onkey(lambda: color('black'), 'K')
 onkey(lambda: color('white'), 'W')
 onkey(lambda: color('green'), 'G')
 onkey(lambda: color('blue'), 'B')
 onkey(lambda: color('red'), 'R')
 
-# permite seleccionar la figura que se quiere dibujar
+# Nuevo color agregado
+onkey(lambda: color('purple'), 'P')
+
+# Selección de figuras
 onkey(lambda: store('shape', line), 'l')
 onkey(lambda: store('shape', square), 's')
 onkey(lambda: store('shape', circle), 'c')
 onkey(lambda: store('shape', rectangle), 'r')
 onkey(lambda: store('shape', triangle), 't')
 
-# nuevo color agregado
-# al presionar la tecla p se selecciona el color morado
-onkey(lambda: color('purple'), 'P')
-
-# mantiene abierta la ventana del programa
+# Mantiene abierta la aplicación
 done()
